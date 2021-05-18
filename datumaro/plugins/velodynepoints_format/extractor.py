@@ -68,7 +68,7 @@ class VelodynePointsExtractor(SourceExtractor):
             elif elem.tag == "occlusion_kf":
                 shape["occluded"] = 1 if int(elem.text) else 0
             elif elem.tag == "finished":
-                for i in range(7):
+                for _ in range(7):
                     shape['points'].append(float(0.0))
                 shape["type"] = "cuboid"
                 label["attributes"] = {}

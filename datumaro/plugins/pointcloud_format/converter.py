@@ -3,7 +3,6 @@ import os
 import os.path as osp
 import random
 import string
-from pathlib import Path
 from collections import OrderedDict
 
 import json
@@ -13,8 +12,8 @@ from datumaro.util.image import save_image, ByteImage
 
 from datumaro.components.converter import Converter
 from datumaro.components.dataset import ItemStatus
-from datumaro.components.extractor import (AnnotationType, DatasetItem, LabelCategories, Owner)
-from datumaro.util import cast, pairs
+from datumaro.components.extractor import (AnnotationType, DatasetItem, Owner)
+from datumaro.util import cast
 
 from .format import PointCloudPath
 
@@ -64,27 +63,27 @@ class PointCloudParser:
         self.generate_objects()
         self.generate_frames()
 
-    def set_objects_key(self, id):
-        self._object_keys[id] = str(uuid.uuid4())
-        self._key_id_data["objects"].update({self._object_keys[id]: id})
+    def set_objects_key(self, object_id):
+        self._object_keys[object_id] = str(uuid.uuid4())
+        self._key_id_data["objects"].update({self._object_keys[object_id]: object_id})
 
-    def set_figures_key(self, id):
-        self._figure_keys[id] = str(uuid.uuid4())
-        self._key_id_data["figures"].update({self._figure_keys[id]: id})
+    def set_figures_key(self, figure_id):
+        self._figure_keys[figure_id] = str(uuid.uuid4())
+        self._key_id_data["figures"].update({self._figure_keys[figure_id]: figure_id})
 
-    def set_videos_key(self, id):
-        self._video_keys[id] = str(uuid.uuid4())
-        self._key_id_data["videos"].update({self._video_keys[id]: id})
+    def set_videos_key(self, video_id):
+        self._video_keys[video_id] = str(uuid.uuid4())
+        self._key_id_data["videos"].update({self._video_keys[video_id]: video_id})
 
-    def get_object_key(self, id):
-        return self._object_keys.get(id, None)
+    def get_object_key(self, object_id):
+        return self._object_keys.get(object_id, None)
 
-    def get_figure_key(self, id):
-        return self._figure_keys.get(id, None)
+    def get_figure_key(self, figure_id):
+        return self._figure_keys.get(figure_id, None)
 
-    def get_video_key(self, id):
+    def get_video_key(self, video_id):
 
-        return self._video_keys.get(id, None)
+        return self._video_keys.get(video_id, None)
 
     def generate_user(self):
         for data in self._annotation:
@@ -124,7 +123,7 @@ class PointCloudParser:
                     self._label_objects.append(label_object)
 
     def generate_frames(self):
-        for i, data in enumerate(self._annotation):
+        for data in self._annotation:
             frame_data = []
             if data.pcd:
                 self._write_item(data, data.id)
@@ -187,7 +186,7 @@ class PointCloudParser:
                 self._context._save_pcd(item,
                                           osp.join(self._context._image_dir, filename))
 
-                for i, rimage in enumerate(item.related_images):
+                for rimage in item.related_images:
 
                     try:
                         name = rimage["name"]
@@ -261,7 +260,7 @@ class PointCloudConverter(Converter):
         self._annotation_dir = osp.join(self._default_dir, PointCloudPath.ANNNOTATION_DIR)
         os.makedirs(self._annotation_dir, exist_ok=True)
 
-        for subset_name, subset in self._extractor.subsets().items():
+        for _, subset in self._extractor.subsets().items():
             pointcloud = PointCloudParser(subset, self)
 
 

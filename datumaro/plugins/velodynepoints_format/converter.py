@@ -4,13 +4,12 @@ import os.path as osp
 from collections import OrderedDict
 from itertools import chain
 from xml.sax.saxutils import XMLGenerator
-import shutil
 
 from datumaro.components.converter import Converter
 from datumaro.components.dataset import ItemStatus
 from datumaro.components.extractor import (AnnotationType, DatasetItem,
     LabelCategories)
-from datumaro.util import cast, pairs
+from datumaro.util import cast
 
 # pose states
 from datumaro.util.image import ByteImage, save_image
@@ -193,7 +192,7 @@ class _SubsetWriter:
 
         for i, data in enumerate(subset):
 
-            for index, item in enumerate(data.annotations):
+            for item in data.annotations:
                 if item.type == AnnotationType.cuboid:
                     if item.label is None:
                         log.warning("Item %s: skipping a %s with no label",
@@ -255,8 +254,8 @@ class _SubsetWriter:
 
         if item.has_pcd:
             if self._context._save_images:
-                dir = osp.join(self._context._save_dir, "velodyne_points")
-                self._context._image_dir = osp.join(dir, "data")
+                velodyne_dir = osp.join(self._context._save_dir, "velodyne_points")
+                self._context._image_dir = osp.join(velodyne_dir, "data")
 
                 self._context._save_pcd(item,
                                         osp.join(self._context._image_dir, filename))

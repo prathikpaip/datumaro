@@ -8,7 +8,6 @@ from glob import iglob
 from typing import Iterable, List, Dict, Optional
 import numpy as np
 import os.path as osp
-from io import BytesIO
 
 import attr
 from attr import attrs, attrib
@@ -563,7 +562,7 @@ class DatasetItem:
     related_images = attrib(type=list, default=[])
 
     @related_images.validator
-    def _image_validator(self, attribute, related_images):
+    def _related_image_validator(self, attribute, related_images):
         self.related_images = []
         image={}
         for related_image in related_images:
