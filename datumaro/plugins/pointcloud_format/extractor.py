@@ -70,7 +70,7 @@ class PointCloudExtractor(SourceExtractor):
         data_dir = osp.join(osp.dirname(path), PointCloudPath.DEFAULT_DIR, PointCloudPath.ANNNOTATION_DIR)
 
         labels = {}
-        for _, __, files in os.walk(data_dir):
+        for _, _, files in os.walk(data_dir):
             for file in files:
                 with open(osp.join(data_dir, file), "r") as f:
                     figure_data = f.read()
@@ -87,7 +87,7 @@ class PointCloudExtractor(SourceExtractor):
                     anno_points = []
                     geometry_type = ["position", "rotation", "dimensions"]
                     for geo in geometry_type:
-                        anno_points = [float(i) for i in figure["geometry"][geo].values()]
+                        anno_points.extend(float(i) for i in figure["geometry"][geo].values())
 
                     for _ in range(7):
                         anno_points.append(0.0)

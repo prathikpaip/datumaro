@@ -12,7 +12,7 @@ from datumaro.util.image import save_image, ByteImage
 
 from datumaro.components.converter import Converter
 from datumaro.components.dataset import ItemStatus
-from datumaro.components.extractor import (AnnotationType, DatasetItem, Owner)
+from datumaro.components.extractor import (AnnotationType, DatasetItem)
 from datumaro.util import cast
 
 from .format import PointCloudPath
