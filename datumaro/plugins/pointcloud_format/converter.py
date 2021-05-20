@@ -1,36 +1,39 @@
-import logging as log
+# Copyright (C) 2021 Intel Corporation
+#
+# SPDX-License-Identifier: MIT
+
 import os
-import os.path as osp
+import json
+import uuid
 import random
 import string
 from collections import OrderedDict
-
-import json
-import uuid
+import os.path as osp
+import logging as log
+from itertools import chain
 
 from datumaro.util.image import save_image, ByteImage
-
 from datumaro.components.converter import Converter
 from datumaro.components.dataset import ItemStatus
-from datumaro.components.extractor import (AnnotationType, DatasetItem)
+from datumaro.components.extractor import (AnnotationType, DatasetItem, LabelCategories)
 from datumaro.util import cast
 
 from .format import PointCloudPath
 
+
 class PointCloudParser:
     _SUPPORTED_SHAPES = 'cuboid'
-    _REQUIRED_FILES = ('KEY_ID', 'FRAME', 'META')
 
     def __init__(self, subset, context):
 
         self._annotation = subset
-
         self._object_keys = {}
         self._figure_keys = {}
         self._video_keys = {}
         self._context = context
         self._user = {}
         self._label_objects = []
+        self._frames = {}
 
         key_id_data = {
             "tags": {},
@@ -96,7 +99,6 @@ class PointCloudParser:
                         break
 
     def generate_objects(self):
-        # label_cat = self._annotation.categories().get(AnnotationType.label, LabelCategories())
 
         for data in self._annotation:
             for item in data.annotations:
@@ -161,8 +163,45 @@ class PointCloudParser:
                         "updatedAt": str(self._user["updatedAt"])
                     }
                     frame_data.append(figures)
+
+                    label_name = self._get_label(item.label).name
+                    for attr_name, attr_value in item.attributes.items():
+                        if attr_name in self._context._builtin_attrs:
+                            continue
+                        if isinstance(attr_value, bool):
+                            attr_value = 'true' if attr_value else 'false'
+                        if self._context._allow_undeclared_attrs or \
+                                attr_name in self._get_label_attrs(item.label):
+                            self._writer.add_attribute(OrderedDict([
+                                ("name", str(attr_name)),
+                                ("value", str(attr_value)),
+                            ]))
+                        else:
+                            log.warning("Item %s: skipping undeclared "
+                                        "attribute '%s' for label '%s' "
+                                        "(allow with --allow-undeclared-attrs option)",
+                                        item.id, attr_name, label_name)
+
             if frame_data:
                 self._frame_data[int(data.attributes["frame"])] = frame_data
+
+    def get_frames(self):
+        return self._frames
+
+    def _get_label(self, label_id):
+        if label_id is None:
+            return ""
+        label_cat = self._annotation.categories().get(
+            AnnotationType.label, LabelCategories())
+        return label_cat.items[label_id]
+
+    def _get_label_attrs(self, label):
+        label_cat = self._annotation.categories().get(
+            AnnotationType.label, LabelCategories())
+        if isinstance(label, int):
+            label = label_cat[label]
+        return set(chain(label.attributes, label_cat.attributes)) - \
+               self._context._builtin_attrs
 
     def _write_item(self, item, index):
         if not self._context._reindex:
@@ -174,7 +213,7 @@ class PointCloudParser:
         else:
             filename = self._context._make_pcd_filename(item)
         image_info["name"] = filename
-        PointCloudPath.WRITE_FILES.append({index: filename})
+        self._frames.update({index: filename})
 
         if item.has_pcd:
             if self._context._save_images:
@@ -261,24 +300,20 @@ class PointCloudConverter(Converter):
         os.makedirs(self._annotation_dir, exist_ok=True)
 
         for _, subset in self._extractor.subsets().items():
-            pointcloud = PointCloudParser(subset, self)
-
+            point_cloud = PointCloudParser(subset, self)
 
             for file_name in PointCloudPath.WRITE_FILES:
 
-                write_dir = self._save_dir
-                if isinstance(file_name, dict):
-                    key = list(file_name.keys())[0]
-                    file_name = f"{list(file_name.values())[0]}.json"
-                    write_dir = self._annotation_dir
-
-                with open(osp.join(write_dir, file_name), "w") as f:
+                with open(osp.join(self._save_dir, file_name), "w") as f:
                     if file_name == "key_id_map.json":
-                        pointcloud.write_key_id_data(f)
+                        point_cloud.write_key_id_data(f)
                     elif file_name == "meta.json":
-                        pointcloud.write_meta_data(f)
-                    else:
-                        pointcloud.write_frame_data(f, key)
+                        point_cloud.write_meta_data(f)
+
+            frame_files = point_cloud.get_frames()
+            for key, file_name in frame_files.items():
+                with open(osp.join(self._annotation_dir, file_name), "w") as f:
+                    point_cloud.write_frame_data(f, key)
 
     @classmethod
     def patch(cls, dataset, patch, save_dir, **kwargs):

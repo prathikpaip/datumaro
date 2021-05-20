@@ -1,3 +1,7 @@
+# Copyright (C) 2021 Intel Corporation
+#
+# SPDX-License-Identifier: MIT
+
 import os.path as osp
 from collections import OrderedDict
 
@@ -5,6 +9,7 @@ from datumaro.components.extractor import (SourceExtractor, DatasetItem,
                                            AnnotationType, Cuboid,
                                            LabelCategories, Importer
                                            )
+
 from .format import VelodynePointsPath
 
 
