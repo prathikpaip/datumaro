@@ -1,3 +1,4 @@
+
 # Copyright (C) 2021 Intel Corporation
 #
 # SPDX-License-Identifier: MIT
@@ -18,8 +19,6 @@ from .format import PointCloudPath
 
 class PointCloudExtractor(SourceExtractor):
     _SUPPORTED_SHAPES = "cuboid"
-    mapping = {}
-    meta = {}
 
     def __init__(self, path, subset=None):
         assert osp.isfile(path), path
@@ -41,6 +40,7 @@ class PointCloudExtractor(SourceExtractor):
 
     @classmethod
     def _parse(cls, path):
+        meta = {}
         path = osp.abspath(path)
         items = OrderedDict()
         categories = {}
@@ -70,8 +70,7 @@ class PointCloudExtractor(SourceExtractor):
         for _, _, files in os.walk(data_dir):
             for file in files:
                 with open(osp.join(data_dir, file), "r") as f:
-                    figure_data = f.read()
-                figure_data = json.loads(figure_data)
+                    figure_data = json.loads(f.read())
 
                 for label in figure_data["objects"]:
                     labels.update({label["key"]: label["classTitle"]})
