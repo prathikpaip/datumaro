@@ -10,6 +10,7 @@ import string
 from collections import OrderedDict
 import os.path as osp
 import logging as log
+from datetime import datetime
 from itertools import chain
 
 from datumaro.util.image import save_image, ByteImage
@@ -62,19 +63,26 @@ class PointCloudParser:
 
         self._frame_data = {}
 
-        self.generate_user()
-        self.generate_objects()
+        # self.generate_user()
+        # self.generate_objects()
         self.generate_frames()
 
     def set_objects_key(self, object_id):
+
+        if object_id in self._object_keys.keys():
+            return
         self._object_keys[object_id] = str(uuid.uuid4())
         self._key_id_data["objects"].update({self._object_keys[object_id]: object_id})
 
     def set_figures_key(self, figure_id):
+        if figure_id in self._figure_keys.keys():
+            return
         self._figure_keys[figure_id] = str(uuid.uuid4())
         self._key_id_data["figures"].update({self._figure_keys[figure_id]: figure_id})
 
     def set_videos_key(self, video_id):
+        if video_id in self._video_keys.keys():
+            return
         self._video_keys[video_id] = str(uuid.uuid4())
         self._key_id_data["videos"].update({self._video_keys[video_id]: video_id})
 
@@ -88,44 +96,40 @@ class PointCloudParser:
 
         return self._video_keys.get(video_id, None)
 
-    def generate_user(self):
-        for data in self._annotation:
-            for item in data.annotations:
-                if not self._user:
-                    if item.type == AnnotationType.owner:
-                        self._user["name"] = item.name
-                        self._user["createdAt"] = item.createdAt
-                        self._user["updatedAt"] = item.updatedAt
-                        break
+    def generate_frames(self):
 
-    def generate_objects(self):
+        classes_info = []
 
         for data in self._annotation:
-            for item in data.annotations:
-                if item.type == AnnotationType.label:
+            if not self._user:
+                self._user["name"] = data.attributes.get("name", "")
+                self._user["createdAt"] = str(data.attributes.get("createdAt", datetime.now()))
+                self._user["updatedAt"] = str(data.attributes.get("updatedAt", datetime.now()))
+
+            if not self._label_objects:
+                for label in data.attributes.get("labels", []):
+
                     classes = {
-                        "id": item.id,
-                        "title": item.name,
-                        "color": item.color,
+                        "id": int(label["label_id"]),
+                        "title": label["name"],
+                        "color": label["color"],
                         "shape": "cuboid_3d",
                         "geometry_config": {},
                         "hotkey": ""
                     }
-                    self.set_objects_key(item.id)
+                    self.set_objects_key(int(label["label_id"]))
 
                     label_object = {
-                        "key": self.get_object_key(item.id),
-                        "classTitle": item.name,
+                        "key": self.get_object_key(int(label["label_id"])),
+                        "classTitle": label["name"],
                         "tags": [],
                         "labelerLogin": self._user["name"],
                         "createdAt": str(self._user["createdAt"]),
                         "updatedAt": str(self._user["updatedAt"])
                     }
-                    self._meta_data["classes"].append(classes)
+                    classes_info.append(classes)
                     self._label_objects.append(label_object)
 
-    def generate_frames(self):
-        for data in self._annotation:
             frame_data = []
             if data.pcd:
                 self._write_item(data, data.id)
@@ -133,13 +137,12 @@ class PointCloudParser:
                     self.set_videos_key(int(data.attributes["frame"]))
 
             for item in data.annotations:
-
                 if item.type == AnnotationType.cuboid:
 
                     self.set_figures_key(item.id)
                     figures = {
                         "key": self.get_figure_key(item.id),
-                        "objectKey": self.get_object_key(item.attributes["label_id"]),
+                        "objectKey": self.get_object_key(int(item.attributes["label_id"])),
                         'geometryType': "cuboid_3d",
                         "geometry": {
                             "position": {
@@ -159,8 +162,8 @@ class PointCloudParser:
                             }
                         },
                         "labelerLogin": self._user["name"],
-                        "createdAt": str(self._user["createdAt"]),
-                        "updatedAt": str(self._user["updatedAt"])
+                        "createdAt": self._user["createdAt"],
+                        "updatedAt": self._user["updatedAt"]
                     }
                     frame_data.append(figures)
 
@@ -172,10 +175,7 @@ class PointCloudParser:
                             attr_value = 'true' if attr_value else 'false'
                         if self._context._allow_undeclared_attrs or \
                                 attr_name in self._get_label_attrs(item.label):
-                            self._writer.add_attribute(OrderedDict([
-                                ("name", str(attr_name)),
-                                ("value", str(attr_value)),
-                            ]))
+                            continue
                         else:
                             log.warning("Item %s: skipping undeclared "
                                         "attribute '%s' for label '%s' "
@@ -184,6 +184,9 @@ class PointCloudParser:
 
             if frame_data:
                 self._frame_data[int(data.attributes["frame"])] = frame_data
+
+        data = list({v['id']: v for v in classes_info}.values())
+        self._meta_data["classes"] = data
 
     def get_frames(self):
         return self._frames
@@ -312,7 +315,7 @@ class PointCloudConverter(Converter):
 
             frame_files = point_cloud.get_frames()
             for key, file_name in frame_files.items():
-                with open(osp.join(self._annotation_dir, file_name), "w") as f:
+                with open(osp.join(self._annotation_dir, f"{file_name}.json"), "w") as f:
                     point_cloud.write_frame_data(f, key)
 
     @classmethod
