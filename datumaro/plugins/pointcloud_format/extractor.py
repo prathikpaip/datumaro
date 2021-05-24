@@ -127,5 +127,4 @@ class PointCloudImporter(Importer):
         for i, source in enumerate(sources):
             if osp.split(source["url"])[-1] == "meta.json" and source["format"] == 'point_cloud':
                 del sources[i]
-
         return sources
