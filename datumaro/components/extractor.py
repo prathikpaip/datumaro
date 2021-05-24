@@ -540,10 +540,12 @@ class DatasetItem:
         for related_image in related_images:
             if callable(related_image) or isinstance(related_image["path"], np.ndarray):
                 image["name"] = related_image["name"]
+                image["save_path"] = related_image["save_path"]
                 image["image"] = Image(data=related_image)
             elif isinstance(related_image["path"], str):
 
                 image["name"] = related_image["name"]
+                image["save_path"] = related_image["save_path"]
                 image["image"] = Image(path=related_image["path"])
             assert image is None or isinstance(image["image"], Image)
 

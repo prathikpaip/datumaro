@@ -312,12 +312,12 @@ class PointCloudConverterTest(TestCase):
                         )
 
             dataset.remove("frame.pcd", "key_id_map")
-            related_image_path = {'related_paths': [r"ds0\related_images\frame_pcd"], "image_names": ["0000000002.png"]}
+            related_image_path = {'related_paths': [r"ds0/related_images/frame_pcd"], "image_names": ["0000000002.png"]}
             dataset.save(save_images=True, **related_image_path)
 
-            self.assertFalse(osp.isfile(osp.abspath(osp.join(path, 'ds0\pointcloud', 'frame.pcd'))))
-            self.assertTrue(osp.isfile(osp.abspath(osp.join(path, 'ds0\pointcloud', 'kitti_0000000001.pcd'))))
+            self.assertFalse(osp.isfile(osp.abspath(osp.join(path, 'ds0/pointcloud', 'frame.pcd'))))
+            self.assertTrue(osp.isfile(osp.abspath(osp.join(path, 'ds0/pointcloud', 'kitti_0000000001.pcd'))))
 
             self.assertTrue(
-                osp.isfile(osp.abspath(osp.join(path, r'ds0\related_images\kitti_0000000001_pcd', '0000000000.png'))))
-            self.assertFalse(osp.isfile(osp.abspath(osp.join(path, r'ds0\related_images\frame_pcd', '0000000002.png'))))
+                osp.isfile(osp.abspath(osp.join(path, r'ds0/related_images/kitti_0000000001_pcd', '0000000000.png'))))
+            self.assertFalse(osp.isfile(osp.abspath(osp.join(path, r'ds0/related_images/frame_pcd', '0000000002.png'))))
