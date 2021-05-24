@@ -16,28 +16,28 @@ from datumaro.util.test_utils import (TestDir, compare_datasets,
 
 DUMMY_PCD_DATASET_DIR = osp.join(osp.dirname(__file__), 'assets', 'velodynepoints_dataset')
 
-
 class VelodynePointsImporterTest(TestCase):
     def test_can_detect_image(self):
         self.assertTrue(VelodynePointsImporter.detect(DUMMY_PCD_DATASET_DIR))
 
     def test_can_load_pcd(self):
-        bin1 = r"C:\Users\Anil HP LGHIVE2104\PycharmProjects\datumaro_latest\tests\assets\velodynepoints_dataset" \
-               r"\velodyne_points\data\0000000000.bin"
-        bin2 = r"C:\Users\Anil HP LGHIVE2104\PycharmProjects\datumaro_latest\tests\assets\velodynepoints_dataset" \
-               r"\velodyne_points\data\0000000001.bin"
-        bin3 = r"C:\Users\Anil HP LGHIVE2104\PycharmProjects\datumaro_latest\tests\assets\velodynepoints_dataset" \
-               r"\velodyne_points\data\0000000002.bin"
+        bin1 = osp.abspath(osp.join(DUMMY_PCD_DATASET_DIR, r"velodyne_points/data/0000000000.bin"))
+        bin2 = osp.abspath(osp.join(DUMMY_PCD_DATASET_DIR, r"velodyne_points/data/0000000001.bin"))
+        bin3 = osp.abspath(osp.join(DUMMY_PCD_DATASET_DIR, r"velodyne_points/data/0000000002.bin"))
+
+        image1 = osp.abspath(osp.join(DUMMY_PCD_DATASET_DIR, r"IMAGE_00/data/0000000000.png"))
+        image2 = osp.abspath(osp.join(DUMMY_PCD_DATASET_DIR, r"IMAGE_00/data/0000000001.png"))
+        image3 = osp.abspath(osp.join(DUMMY_PCD_DATASET_DIR, r"IMAGE_00/data/0000000003.png"))
 
         expected_dataset = Dataset.from_iterable([
             DatasetItem(id='frame_000000', annotations=[Cuboid(id=0, attributes={'occluded': 0}, group=0, points=[-3.6271575019618414, 7.954996769991751, -1.0343550199580118, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], label=0, z_order=0),
                                                         Cuboid(id=0, attributes={'occluded': 0}, group=0, points=[23.0169506240644, 8.343682404650442, -0.7699940133040206, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], label=1, z_order=0)],
                         subset='tracklets', path=[], image=None, pcd=bin1, related_images=[{"name": "0000000000.png", "save_path": "IMAGE_00",
-                                         "path": r"C:\Users\Anil HP LGHIVE2104\PycharmProjects\datumaro_latest\tests\assets\velodynepoints_dataset\IMAGE_00\data\0000000000.png"},
+                                         "path": image1},
            ], attributes={'frame': 0}),
             DatasetItem(id='frame_000001', annotations=[Cuboid(id=0, attributes={'occluded': 0}, group=0, points=[0.39720775117329943, 7.286424562074529, -0.8997166481217596, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], label=1, z_order=0)],
                         subset='tracklets', path=[], image=None, pcd=bin2, related_images=[{"name": "0000000001.png", "save_path": "IMAGE_00",
-                                         "path": r"C:\Users\Anil HP LGHIVE2104\PycharmProjects\datumaro_latest\tests\assets\velodynepoints_dataset\IMAGE_00\data\0000000001.png"},
+                                         "path": image2},
            ], attributes={'frame': 1}),
             DatasetItem(id='frame_000002', annotations=[Cuboid(id=0, attributes={'occluded': 0}, group=0,
                                                                points=[13.54034048060633, -9.410120134481405,
@@ -45,7 +45,7 @@ class VelodynePointsImporterTest(TestCase):
                                                                        1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], label=0,
                                                                z_order=0)], subset='tracklets', path=[], image=None,
                         pcd=bin3, related_images=[{"name": "0000000002.png", "save_path": "IMAGE_00",
-                                         "path": r"C:\Users\Anil HP LGHIVE2104\PycharmProjects\datumaro_latest\tests\assets\velodynepoints_dataset\IMAGE_00\data\0000000002.png"},
+                                         "path": image3},
            ], attributes={'frame': 2})
 
         ], categories={
@@ -61,13 +61,13 @@ class VelodynePointsImporterTest(TestCase):
 
 
 class VelodynePointsConverterTest(TestCase):
+    bin1 = osp.abspath(osp.join(DUMMY_PCD_DATASET_DIR, r"velodyne_points/data/0000000000.bin"))
+    bin2 = osp.abspath(osp.join(DUMMY_PCD_DATASET_DIR, r"velodyne_points/data/0000000001.bin"))
+    bin3 = osp.abspath(osp.join(DUMMY_PCD_DATASET_DIR, r"velodyne_points/data/0000000002.bin"))
 
-    bin1 = r"C:\Users\Anil HP LGHIVE2104\PycharmProjects\datumaro_latest\tests\assets\velodynepoints_dataset" \
-               r"\velodyne_points\data\0000000000.bin"
-    bin2 = r"C:\Users\Anil HP LGHIVE2104\PycharmProjects\datumaro_latest\tests\assets\velodynepoints_dataset" \
-               r"\velodyne_points\data\0000000001.bin"
-    bin3 = r"C:\Users\Anil HP LGHIVE2104\PycharmProjects\datumaro_latest\tests\assets\velodynepoints_dataset" \
-               r"\velodyne_points\data\0000000002.bin"
+    image1 = osp.abspath(osp.join(DUMMY_PCD_DATASET_DIR, r"IMAGE_00/data/0000000000.png"))
+    image2 = osp.abspath(osp.join(DUMMY_PCD_DATASET_DIR, r"IMAGE_00/data/0000000001.png"))
+    image3 = osp.abspath(osp.join(DUMMY_PCD_DATASET_DIR, r"IMAGE_00/data/0000000003.png"))
 
     dimension = {"dimension": "3d"}
 
@@ -92,9 +92,9 @@ class VelodynePointsConverterTest(TestCase):
                         subset='tracklets',
                         path=[],
                         image=None,
-                        pcd=r"C:\Users\Anil HP LGHIVE2104\PycharmProjects\datumaro_latest\tests\assets\velodynepoints_dataset\velodyne_points\data\0000000002.bin",
-                        related_images=[{"name": "0000000002.png", "save_path": "IMAGE_00",
-                                         "path": r"C:\Users\Anil HP LGHIVE2104\PycharmProjects\datumaro_latest\tests\assets\velodynepoints_dataset\IMAGE_00\data\0000000002.png"},
+                        pcd=self.bin1,
+                        related_images=[{"name": "0000000000.png", "save_path": "IMAGE_00",
+                                         "path": self.image1},
                                         ],
                         attributes={'frame': 0}
                         ),
@@ -114,13 +114,13 @@ class VelodynePointsConverterTest(TestCase):
                         subset='tracklets',
                         path=[],
                         image=None,
-                        pcd=r"C:\Users\Anil HP LGHIVE2104\PycharmProjects\datumaro_latest\tests\assets\velodynepoints_dataset\velodyne_points\data\0000000002.bin",
-                        related_images=[{"name": "0000000002.png", "save_path": "IMAGE_00",
-                                         "path": r"C:\Users\Anil HP LGHIVE2104\PycharmProjects\datumaro_latest\tests\assets\velodynepoints_dataset\IMAGE_00\data\0000000002.png"},
+                        pcd=self.bin1,
+                        related_images=[{"name": "0000000000.png", "save_path": "IMAGE_00",
+                                         "path": self.image1},
                                         ],
                         attributes={'frame': 0}
                         ),
-        ], categories={ AnnotationType.label: target_label_cat })
+        ], categories={AnnotationType.label: target_label_cat})
 
         with TestDir() as test_dir:
 
@@ -140,9 +140,9 @@ class VelodynePointsConverterTest(TestCase):
                         subset='tracklets',
                         path=[],
                         image=None,
-                        pcd=r"C:\Users\Anil HP LGHIVE2104\PycharmProjects\datumaro_latest\tests\assets\velodynepoints_dataset\velodyne_points\data\0000000002.bin",
-                        related_images=[{"name": "0000000002.png", "save_path": "IMAGE_00",
-                                         "path": r"C:\Users\Anil HP LGHIVE2104\PycharmProjects\datumaro_latest\tests\assets\velodynepoints_dataset\IMAGE_00\data\0000000002.png"},
+                        pcd=self.bin1,
+                        related_images=[{"name": "0000000000.png", "save_path": "IMAGE_00",
+                                         "path": self.image1},
                                         ],
                         attributes={'frame': 40}
                         )
@@ -166,9 +166,9 @@ class VelodynePointsConverterTest(TestCase):
                         subset='tracklets',
                         path=[],
                         image=None,
-                        pcd=r"C:\Users\Anil HP LGHIVE2104\PycharmProjects\datumaro_latest\tests\assets\velodynepoints_dataset\velodyne_points\data\0000000002.bin",
-                        related_images=[{"name": "0000000002.png", "save_path": "IMAGE_00",
-                                         "path": r"C:\Users\Anil HP LGHIVE2104\PycharmProjects\datumaro_latest\tests\assets\velodynepoints_dataset\IMAGE_00\data\0000000002.png"},
+                        pcd=self.bin1,
+                        related_images=[{"name": "0000000000.png", "save_path": "IMAGE_00",
+                                         "path": self.image1},
                                         ],
                         attributes={'frame': 20}
                         )
@@ -187,15 +187,16 @@ class VelodynePointsConverterTest(TestCase):
                         subset='tracklets',
                         path=[],
                         image=None,
-                        pcd=r"C:\Users\Anil HP LGHIVE2104\PycharmProjects\datumaro_latest\tests\assets\velodynepoints_dataset\velodyne_points\data\0000000002.bin",
+                        pcd=self.bin1,
                         related_images=[{"name": "0000000002.png", "save_path": "IMAGE_00",
-                                         "path": r"C:\Users\Anil HP LGHIVE2104\PycharmProjects\datumaro_latest\tests\assets\velodynepoints_dataset\IMAGE_00\data\0000000002.png"},
+                                         "path": self.image1},
                                         ],
                         attributes={'frame': 0}
                         )
-        ], categories={
-  AnnotationType.label: LabelCategories.from_iterable(['car'])
-})
+                ], categories={
+          AnnotationType.label: LabelCategories.from_iterable(['car'])
+        })
+
         with TestDir() as test_dir:
             self._test_save_and_load(source_dataset,
                 partial(VelodynePointsConverter.convert, reindex=True), test_dir,
@@ -213,8 +214,7 @@ class VelodynePointsConverterTest(TestCase):
                             subset='tracklets',
                             pcd=self.bin3,
                             related_images=[{"name": "0000000002.png", "save_path": "IMAGE_00",
-                                         "path": r"C:\Users\Anil HP LGHIVE2104\PycharmProjects\datumaro_latest\tests"
-                                                 r"\assets\velodynepoints_dataset\IMAGE_00\data\0000000002.png"}],
+                                         "path": self.image2}],
                             )
             ])
 
@@ -228,7 +228,7 @@ class VelodynePointsConverterTest(TestCase):
                             subset='tracklets',
                             pcd=self.bin2,
                             related_images=[{"name": "0000000001.png", "save_path": "IMAGE_00",
-                                         "path": r"C:\Users\Anil HP LGHIVE2104\PycharmProjects\datumaro_latest\tests\assets\velodynepoints_dataset\IMAGE_00\data\0000000001.png"}],
+                                         "path": self.image2}],
                             ))
 
             dataset.remove("0000000002.bin", "tracklets")
