@@ -63,7 +63,8 @@ class PointCloudParser:
         }
 
         self._frame_data = {}
-
+        self.set_user_data()
+        self.set_label_data()
         self.generate_frames()
 
     def set_objects_key(self, object_id):
@@ -92,18 +93,19 @@ class PointCloudParser:
         return self._figure_keys.get(figure_id, None)
 
     def get_video_key(self, video_id):
-
         return self._video_keys.get(video_id, None)
 
-    def generate_frames(self):
-
-        classes_info = []
-
-        for i, data in enumerate(self._annotation):
+    def set_user_data(self):
+        for data in self._annotation:
             if not self._user:
                 self._user["name"] = data.attributes.get("name", "")
                 self._user["createdAt"] = str(data.attributes.get("createdAt", datetime.now()))
                 self._user["updatedAt"] = str(data.attributes.get("updatedAt", datetime.now()))
+                break
+
+    def set_label_data(self):
+        classes_info = []
+        for data in self._annotation:
 
             if not self._label_objects:
                 for label in data.attributes.get("labels", []):
@@ -128,6 +130,13 @@ class PointCloudParser:
                     }
                     classes_info.append(classes)
                     self._label_objects.append(label_object)
+
+        data = list({v['id']: v for v in classes_info}.values())
+        self._meta_data["classes"] = data
+
+    def generate_frames(self):
+
+        for i, data in enumerate(self._annotation):
 
             frame_data = []
             if data.pcd:
@@ -190,9 +199,6 @@ class PointCloudParser:
                     self._frame_data[int(index)] = frame_data
                 else:
                     self._frame_data[int(data.attributes["frame"])] = frame_data
-
-        data = list({v['id']: v for v in classes_info}.values())
-        self._meta_data["classes"] = data
 
     def get_frames(self):
         return self._frames
@@ -311,21 +317,20 @@ class PointCloudConverter(Converter):
         self._annotation_dir = osp.join(self._default_dir, PointCloudPath.ANNNOTATION_DIR)
         os.makedirs(self._annotation_dir, exist_ok=True)
 
-        for _, subset in self._extractor.subsets().items():
-            point_cloud = PointCloudParser(subset, self)
+        point_cloud = PointCloudParser(self._extractor, self)
+        for file_name in PointCloudPath.WRITE_FILES:
 
-            for file_name in PointCloudPath.WRITE_FILES:
+            with open(osp.join(self._save_dir, file_name), "w") as f:
+                if file_name == "key_id_map.json":
+                    point_cloud.write_key_id_data(f)
+                elif file_name == "meta.json":
+                    point_cloud.write_meta_data(f)
 
-                with open(osp.join(self._save_dir, file_name), "w") as f:
-                    if file_name == "key_id_map.json":
-                        point_cloud.write_key_id_data(f)
-                    elif file_name == "meta.json":
-                        point_cloud.write_meta_data(f)
+        frame_files = point_cloud.get_frames()
+        for key, file_name in frame_files.items():
+            with open(osp.join(self._annotation_dir, f"{file_name}.json"), "w") as f:
+                point_cloud.write_frame_data(f, key)
 
-            frame_files = point_cloud.get_frames()
-            for key, file_name in frame_files.items():
-                with open(osp.join(self._annotation_dir, f"{file_name}.json"), "w") as f:
-                    point_cloud.write_frame_data(f, key)
 
     @classmethod
     def patch(cls, dataset, patch, save_dir, **kwargs):

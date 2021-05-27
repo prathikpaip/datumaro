@@ -2,7 +2,6 @@
 # Copyright (C) 2021 Intel Corporation
 #
 # SPDX-License-Identifier: MIT
-
 class PointCloudPath:
     DEFAULT_DIR = "ds0"
     ANNNOTATION_DIR = "ann"

@@ -6,5 +6,4 @@
 class VelodynePointsPath:
     IMAGES_DIR = "velodyne_points/data"
     RELATED_DIR = "image_"
-
     BUILTIN_ATTRS = set("occluded")

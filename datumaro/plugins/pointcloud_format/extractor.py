@@ -5,13 +5,16 @@
 
 import json
 import os
+
 from collections import OrderedDict
 import os.path as osp
 
+
 from datumaro.components.extractor import (SourceExtractor, DatasetItem,
-                                           AnnotationType, Cuboid,
-                                           LabelCategories, Importer
-                                           )
+    AnnotationType,Cuboid,
+    LabelCategories, Importer
+)
+
 from datumaro.util.image import Image
 
 from .format import PointCloudPath
