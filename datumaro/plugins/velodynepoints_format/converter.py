@@ -205,7 +205,7 @@ class _SubsetWriter:
                     }
                     print(f"")
                     for attrs in self._get_label_attrs(item.label):
-                        tracklet["attribute"]["name"] = attrs
+                        tracklet["attributes"]["name"] = attrs
 
                     pose = {
                         "tx": item.points[3],
