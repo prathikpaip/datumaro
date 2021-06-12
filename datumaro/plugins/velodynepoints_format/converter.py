@@ -159,7 +159,7 @@ class XmlAnnotationWriter:
                     else:
                         self._indent(newline=True)
                         if element == "attributes":
-                            for element, value in tracklet["attributes"]:
+                            for element, value in tracklet["attributes"].items():
                                 self.xmlgen.startElement(element, {})
                                 self.xmlgen.characters(str(value))
                                 self.xmlgen.endElement(element)
@@ -203,7 +203,7 @@ class _SubsetWriter:
                         "poses": [],
                         "attributes": {}
                     }
-                    print(f"")
+
                     for attrs in self._get_label_attrs(item.label):
                         tracklet["attributes"]["name"] = attrs
 
