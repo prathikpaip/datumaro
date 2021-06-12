@@ -259,6 +259,9 @@ class _SubsetWriter:
             AnnotationType.label, LabelCategories())
         if isinstance(label, int):
             label = label_cat[label]
+            from cvat.apps.engine.test_logs import tlog
+            l = tlog()
+            l.info(f"-------------------- {label=} {label_cat.attributes}")
         return set(chain(label.attributes, label_cat.attributes)) - \
             self._context._builtin_attrs
 
