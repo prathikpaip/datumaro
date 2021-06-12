@@ -20,7 +20,6 @@ from datumaro.util.image import ByteImage, save_image
 from .format import VelodynePointsPath, VelodynePointsState
 
 
-
 class XmlAnnotationWriter:
 
     def __init__(self, file, tracklets):
@@ -159,9 +158,15 @@ class XmlAnnotationWriter:
                         self._add_pose(value)
                     else:
                         self._indent(newline=True)
-                        self.xmlgen.startElement(element, {})
-                        self.xmlgen.characters(str(value))
-                        self.xmlgen.endElement(element)
+                        if element == "attributes":
+                            for element, value in tracklet["attributes"]:
+                                self.xmlgen.startElement(element, {})
+                                self.xmlgen.characters(str(value))
+                                self.xmlgen.endElement(element)
+                        else:
+                            self.xmlgen.startElement(element, {})
+                            self.xmlgen.characters(str(value))
+                            self.xmlgen.endElement(element)
 
                 self._end_item()
         self._close_tracklet()
@@ -195,8 +200,14 @@ class _SubsetWriter:
                         "w": item.points[1],
                         "l": item.points[2],
                         "first_frame": index if index is not None else data.attributes.get('frame', 0),
-                        "poses": []
+                        "poses": [],
+                        "attributes": {}
                     }
+
+                    for attrs in self._get_label_attrs(label_name):
+                        for key, value in attrs.items():
+                            tracklet["attribute"][key] = value
+
                     pose = {
                         "tx": item.points[3],
                         "ty": item.points[4],
@@ -298,6 +309,7 @@ class _SubsetWriter:
 
         if index is not None:
             return index
+
 
 class VelodynePointsConverter(Converter):
     DEFAULT_IMAGE_EXT = ".pcd"
