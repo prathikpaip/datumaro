@@ -203,8 +203,8 @@ class _SubsetWriter:
                         "poses": [],
                         "attributes": {}
                     }
-
-                    for attrs in self._get_label_attrs(label_name):
+                    print(f"")
+                    for attrs in self._get_label_attrs(item.label):
                         for key, value in attrs.items():
                             tracklet["attribute"][key] = value
 
@@ -255,13 +255,12 @@ class _SubsetWriter:
         return label_cat.items[label_id]
 
     def _get_label_attrs(self, label):
+        print(f" ************** {label=}")
         label_cat = self._extractor.categories().get(
             AnnotationType.label, LabelCategories())
+        print(f" ************** {label_cat=}")
         if isinstance(label, int):
             label = label_cat[label]
-            from cvat.apps.engine.test_logs import tlog
-            l = tlog()
-            l.info(f"-------------------- {label=} {label_cat.attributes}")
         return set(chain(label.attributes, label_cat.attributes)) - \
             self._context._builtin_attrs
 
