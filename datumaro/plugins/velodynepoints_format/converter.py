@@ -159,10 +159,13 @@ class XmlAnnotationWriter:
                     else:
                         self._indent(newline=True)
                         if element == "attributes":
+                            self.xmlgen.startElement("attributes", {})
                             for element, value in tracklet["attributes"].items():
+                                self._indent(newline=True)
                                 self.xmlgen.startElement(element, {})
                                 self.xmlgen.characters(str(value))
                                 self.xmlgen.endElement(element)
+                            self.xmlgen.endElement("attributes")
                         else:
                             self.xmlgen.startElement(element, {})
                             self.xmlgen.characters(str(value))
