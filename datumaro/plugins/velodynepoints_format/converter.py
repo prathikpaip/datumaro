@@ -176,7 +176,6 @@ class XmlAnnotationWriter:
             self._close_attribute()
         self._close_attributes()
 
-
     def generate_tracklets(self):
         self._write_headers()
         self._write_doctype()
@@ -191,14 +190,12 @@ class XmlAnnotationWriter:
                 for element, value in tracklet.items():
                     if isinstance(value, list):
                         self._add_pose(value)
+                    elif element == "attributes":
+                        self._add_attribute(value)
                     else:
-                        self._indent(newline=True)
-                        if element == "attributes":
-                            self._add_attribute(value)
-                        else:
-                            self.xmlgen.startElement(element, {})
-                            self.xmlgen.characters(str(value))
-                            self.xmlgen.endElement(element)
+                        self.xmlgen.startElement(element, {})
+                        self.xmlgen.characters(str(value))
+                        self.xmlgen.endElement(element)
 
                 self._end_item()
         self._close_tracklet()
