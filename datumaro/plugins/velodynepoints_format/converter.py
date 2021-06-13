@@ -188,11 +188,11 @@ class XmlAnnotationWriter:
             for tracklet in self._tracklets:
                 self._start_item()
                 for element, value in tracklet.items():
-                    if isinstance(value, list):
+                    if element == "poses":
                         self._add_pose(value)
+                    elif element == "attributes":
+                        self._add_attribute(value)
                     else:
-                        if element == "attributes":
-                            self._add_attribute(value)
                         self.xmlgen.startElement(element, {})
                         self.xmlgen.characters(str(value))
                         self.xmlgen.endElement(element)
