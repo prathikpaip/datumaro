@@ -142,6 +142,21 @@ class XmlAnnotationWriter:
             self._end_item()
         self._close_pose()
 
+    def _open_tracklet(self):
+        self._indent(newline=True)
+        self._level += 1
+        self._indent()
+        self.xmlgen.startElement("attribute", {})
+
+    def _close_attribute(self):
+        self._level -= 1
+        self._indent()
+        self.xmlgen.endElement("attribute")
+
+    def _add_attribute(self, attributes):
+
+
+
     def generate_tracklets(self):
         self._write_headers()
         self._write_doctype()
@@ -160,7 +175,7 @@ class XmlAnnotationWriter:
                         self._indent(newline=True)
                         if element == "attributes":
                             self.xmlgen.startElement("attributes", {})
-                            for element, value in tracklet["attributes"].items():
+                            for attribue in tracklet["attributes"]:
                                 self._indent(newline=True)
                                 self.xmlgen.startElement(element, {})
                                 self.xmlgen.characters(str(value))
@@ -204,20 +219,24 @@ class _SubsetWriter:
                         "l": item.points[2],
                         "first_frame": index if index is not None else data.attributes.get('frame', 0),
                         "poses": [],
-                        "attributes": {}
+                        "attributes": []
                     }
 
                     values = ["name", "mutable", "input_type", "default_value", "values"]
                     for attrs in self._get_label_attrs(item.label):
                         if attrs == "occluded":
                             continue
-
+                        attribute = {}
                         if values:
-                            tracklet["attributes"]["name"] = attrs
-                            tracklet["attributes"]["mutable"] = "True"
-                            tracklet["attributes"]["input_type"] = "text"
-                            tracklet["attributes"]["default_value"] = ""
-                            tracklet["attributes"]["values"] = ""
+                            attribute["name"] = attrs
+                            attribute["mutable"] = "True"
+                            attribute["input_type"] = "text"
+                            attribute["default_value"] = ""
+                            attribute["values"] = ""
+
+                        tracklet["attributes"].append()
+
+
 
                     pose = {
                         "tx": item.points[3],
