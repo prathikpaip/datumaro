@@ -248,7 +248,7 @@ class _SubsetWriter:
                             attribute["default_value"] = ""
                             attribute["values"] = ""
 
-                        tracklet["attributes"].append()
+                        tracklet["attributes"].append(attribute)
 
 
 
