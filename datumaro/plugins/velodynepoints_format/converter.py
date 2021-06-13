@@ -142,7 +142,18 @@ class XmlAnnotationWriter:
             self._end_item()
         self._close_pose()
 
-    def _open_tracklet(self):
+    def _open_attributes(self):
+        self._indent(newline=True)
+        self._level += 1
+        self._indent()
+        self.xmlgen.startElement("attribute", {})
+
+    def _close_attributes(self):
+        self._level -= 1
+        self._indent()
+        self.xmlgen.endElement("attribute")
+
+    def _open_attribute(self):
         self._indent(newline=True)
         self._level += 1
         self._indent()
@@ -154,7 +165,16 @@ class XmlAnnotationWriter:
         self.xmlgen.endElement("attribute")
 
     def _add_attribute(self, attributes):
-
+        self._open_attributes()
+        for attribute in attributes:
+            self._open_attribute()
+            for key in attribute.keys():
+                self._indent(newline=True)
+                self.xmlgen.startElement(key, {})
+                self.xmlgen.characters(attribute[key])
+                self.xmlgen.endElement(key)
+            self._close_attribute()
+        self._close_attributes()
 
 
     def generate_tracklets(self):
@@ -174,13 +194,7 @@ class XmlAnnotationWriter:
                     else:
                         self._indent(newline=True)
                         if element == "attributes":
-                            self.xmlgen.startElement("attributes", {})
-                            for attribue in tracklet["attributes"]:
-                                self._indent(newline=True)
-                                self.xmlgen.startElement(element, {})
-                                self.xmlgen.characters(str(value))
-                                self.xmlgen.endElement(element)
-                            self.xmlgen.endElement("attributes")
+                            self._add_attribute(value)
                         else:
                             self.xmlgen.startElement(element, {})
                             self.xmlgen.characters(str(value))
