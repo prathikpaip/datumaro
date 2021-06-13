@@ -250,8 +250,6 @@ class _SubsetWriter:
 
                         tracklet["attributes"].append(attribute)
 
-
-
                     pose = {
                         "tx": item.points[3],
                         "ty": item.points[4],
