@@ -209,8 +209,15 @@ class _SubsetWriter:
 
                     values = ["name", "mutable", "input_type", "default_value", "values"]
                     for attrs in self._get_label_attrs(item.label):
-                        if values and attrs != "occluded":
-                            tracklet["attributes"][values.pop(0)] = attrs
+                        if attrs == "occluded":
+                            continue
+
+                        if values:
+                            tracklet["attributes"]["name"] = attrs
+                            tracklet["attributes"]["mutable"] = "True"
+                            tracklet["attributes"]["input_type"] = "text"
+                            tracklet["attributes"]["default_value"] = ""
+                            tracklet["attributes"]["values"] = ""
 
                     pose = {
                         "tx": item.points[3],
