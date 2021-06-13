@@ -146,12 +146,12 @@ class XmlAnnotationWriter:
         self._indent(newline=True)
         self._level += 1
         self._indent()
-        self.xmlgen.startElement("attribute", {})
+        self.xmlgen.startElement("attributes", {})
 
     def _close_attributes(self):
         self._level -= 1
         self._indent()
-        self.xmlgen.endElement("attribute")
+        self.xmlgen.endElement("attributes")
 
     def _open_attribute(self):
         self._indent(newline=True)
@@ -229,8 +229,8 @@ class _SubsetWriter:
                         "w": item.points[1],
                         "l": item.points[2],
                         "first_frame": index if index is not None else data.attributes.get('frame', 0),
-                        "poses": [],
-                        "attributes": []
+                        "attributes": [],
+                        "poses": []
                     }
 
                     values = ["name", "mutable", "input_type", "default_value", "values"]
