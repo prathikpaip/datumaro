@@ -165,8 +165,6 @@ class XmlAnnotationWriter:
                                 self.xmlgen.startElement(element, {})
                                 self.xmlgen.characters(str(value))
                                 self.xmlgen.endElement(element)
-                            self._level -= 1
-                            self._indent()
                             self.xmlgen.endElement("attributes")
                         else:
                             self.xmlgen.startElement(element, {})
@@ -209,8 +207,8 @@ class _SubsetWriter:
                         "attributes": {}
                     }
 
+                    values = ["name", "mutable", "input_type", "default_value", "values"]
                     for attrs in self._get_label_attrs(item.label):
-                        values = ["name", "mutable", "input_type", "default_value", "values"]
                         if values and attrs != "occluded":
                             tracklet["attributes"][values.pop(0)] = attrs
 
