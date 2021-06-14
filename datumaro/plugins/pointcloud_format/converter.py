@@ -138,7 +138,7 @@ class PointCloudParser:
                         }
 
                         self._meta_data["tags"].append(tag)
-
+                        print(f"{i=}")
                         tag = {
                             "name": attrs,
                             "value": self._get_label(item.label).name,
@@ -177,6 +177,9 @@ class PointCloudParser:
                         "createdAt": str(self._user["createdAt"]),
                         "updatedAt": str(self._user["updatedAt"])
                     }
+                    for tag in self._tags:
+                        if tag["name"] == label["name"]:
+                            label_object["tags"].append(tag)
                     classes_info.append(classes)
                     self._label_objects.append(label_object)
 

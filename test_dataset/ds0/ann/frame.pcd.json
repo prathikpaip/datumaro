@@ -1,10 +1,10 @@
 {
     "description": "",
-    "key": "a040baa1-d0d7-4f4e-ae6a-89093cd2efdb",
+    "key": "6b98594e-593a-474a-a2a1-2a37da00d4dd",
     "tags": [],
     "objects": [
         {
-            "key": "5b4d212f-f47a-4a4a-90a5-b2fe252c6d66",
+            "key": "229991e7-e9cc-4b3e-bb81-310ad395135d",
             "classTitle": "car",
             "tags": [],
             "labelerLogin": "Anil",
@@ -12,7 +12,7 @@
             "updatedAt": ""
         },
         {
-            "key": "5ceb87fd-a61b-462a-80ad-ce2a111e0d70",
+            "key": "2ef86339-acb1-4289-997a-94d59d09743c",
             "classTitle": "bus",
             "tags": [],
             "labelerLogin": "Anil",
@@ -22,8 +22,8 @@
     ],
     "figures": [
         {
-            "key": "17958cba-48df-482f-b3b6-d66333511131",
-            "objectKey": "5b4d212f-f47a-4a4a-90a5-b2fe252c6d66",
+            "key": "446b38f9-cd9c-4213-b4bd-84aea5f93610",
+            "objectKey": "229991e7-e9cc-4b3e-bb81-310ad395135d",
             "geometryType": "cuboid_3d",
             "geometry": {
                 "position": {
@@ -47,8 +47,8 @@
             "updatedAt": ""
         },
         {
-            "key": "a46b25df-8403-4eae-8c1a-7a3b8b7920ef",
-            "objectKey": "5ceb87fd-a61b-462a-80ad-ce2a111e0d70",
+            "key": "517795d7-2fb6-46e0-92f0-0a3b817efe8a",
+            "objectKey": "2ef86339-acb1-4289-997a-94d59d09743c",
             "geometryType": "cuboid_3d",
             "geometry": {
                 "position": {
