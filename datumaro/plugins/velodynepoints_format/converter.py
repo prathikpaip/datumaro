@@ -1,4 +1,3 @@
-
 # Copyright (C) 2021 Intel Corporation
 #
 # SPDX-License-Identifier: MIT
@@ -13,7 +12,7 @@ from xml.sax.saxutils import XMLGenerator
 from datumaro.components.converter import Converter
 from datumaro.components.dataset import ItemStatus
 from datumaro.components.extractor import (AnnotationType, DatasetItem,
-    LabelCategories)
+                                           LabelCategories)
 from datumaro.util import cast
 from datumaro.util.image import ByteImage, save_image
 
@@ -143,12 +142,9 @@ class XmlAnnotationWriter:
         self._close_pose()
 
     def _open_attributes(self):
-        self._indent()
         self.xmlgen.startElement("attributes", {})
 
     def _close_attributes(self):
-        self._level -= 1
-        self._indent()
         self.xmlgen.endElement("attributes")
 
     def _open_attribute(self):
@@ -231,17 +227,16 @@ class _SubsetWriter:
                         "poses": []
                     }
 
-                    values = ["name", "mutable", "input_type", "default_value", "values"]
                     for attrs in self._get_label_attrs(item.label):
                         if attrs == "occluded":
                             continue
-                        attribute = {}
-                        if values:
-                            attribute["name"] = attrs
-                            attribute["mutable"] = "True"
-                            attribute["input_type"] = "text"
-                            attribute["default_value"] = ""
-                            attribute["values"] = ""
+                        attribute = {
+                            "name": attrs,
+                            "mutable": "True",
+                            "input_type": "text",
+                            "default_value": "",
+                            "values": ""
+                        }
 
                         tracklet["attributes"].append(attribute)
 
@@ -252,10 +247,15 @@ class _SubsetWriter:
                         "rx": item.points[6],
                         "ry": item.points[7],
                         "rz": item.points[8],
-                        "state": VelodynePointsState.POSE_STATES.get(item.attributes.get("state"), VelodynePointsState.POSE_STATES["LABELED"]),
-                        "occlusion": VelodynePointsState.OCCLUSION_STATES.get(item.attributes.get("occlusion"), VelodynePointsState.OCCLUSION_STATES["OCCLUSION_UNSET"]),
+                        "state": VelodynePointsState.POSE_STATES.get(item.attributes.get("state"),
+                                                                     VelodynePointsState.POSE_STATES["LABELED"]),
+                        "occlusion": VelodynePointsState.OCCLUSION_STATES.get(item.attributes.get("occlusion"),
+                                                                              VelodynePointsState.OCCLUSION_STATES[
+                                                                                  "OCCLUSION_UNSET"]),
                         "occlusion_kf": 1 if item.attributes.get("occluded", False) else 0,
-                        "truncation": VelodynePointsState.TRUNCATION_STATE.get(item.attributes.get("truncation"), VelodynePointsState.TRUNCATION_STATE["TRUNCATION_UNSET"]),
+                        "truncation": VelodynePointsState.TRUNCATION_STATE.get(item.attributes.get("truncation"),
+                                                                               VelodynePointsState.TRUNCATION_STATE[
+                                                                                   "TRUNCATION_UNSET"]),
                         "amt_occlusion": -1,
                         "amt_border_l": -1,
                         "amt_border_r": -1,
@@ -299,7 +299,7 @@ class _SubsetWriter:
         if isinstance(label, int):
             label = label_cat[label]
         return set(chain(label.attributes, label_cat.attributes)) - \
-            self._context._builtin_attrs
+               self._context._builtin_attrs
 
     def _write_item(self, item, index):
         if not self._context._reindex:
@@ -357,14 +357,14 @@ class VelodynePointsConverter(Converter):
     def build_cmdline_parser(cls, **kwargs):
         parser = super().build_cmdline_parser(**kwargs)
         parser.add_argument('--reindex', action='store_true',
-            help="Assign new indices to frames (default: %(default)s)")
+                            help="Assign new indices to frames (default: %(default)s)")
         parser.add_argument('--allow-undeclared-attrs', action='store_true',
-            help="Write annotation attributes even if they are not present in "
-                "the input dataset metainfo (default: %(default)s)")
+                            help="Write annotation attributes even if they are not present in "
+                                 "the input dataset metainfo (default: %(default)s)")
         return parser
 
     def __init__(self, extractor, save_dir, reindex=False,
-            allow_undeclared_attrs=False, **kwargs):
+                 allow_undeclared_attrs=False, **kwargs):
         super().__init__(extractor, save_dir, **kwargs)
 
         self._reindex = reindex
@@ -399,9 +399,8 @@ class VelodynePointsConverter(Converter):
 
             if kwargs:
                 for path in kwargs.get('related_paths'):
-                    image_dir = osp.abspath(osp.join(save_dir,path))
+                    image_dir = osp.abspath(osp.join(save_dir, path))
                 for image in kwargs["image_names"]:
                     image_path = osp.join(image_dir, image)
                     if osp.isfile(image_path):
                         os.unlink(image_path)
-

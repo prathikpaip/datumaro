@@ -32,10 +32,12 @@ class PointCloudParser:
         self._object_keys = {}
         self._figure_keys = {}
         self._video_keys = {}
+        self._tag_keys = {}
         self._context = context
         self._user = {}
         self._label_objects = []
         self._frames = {}
+        self._tags = []
 
         key_id_data = {
             "tags": {},
@@ -68,7 +70,6 @@ class PointCloudParser:
         self.generate_frames()
 
     def set_objects_key(self, object_id):
-
         if object_id in self._object_keys.keys():
             return
         self._object_keys[object_id] = str(uuid.uuid4())
@@ -86,6 +87,12 @@ class PointCloudParser:
         self._video_keys[video_id] = str(uuid.uuid4())
         self._key_id_data["videos"].update({self._video_keys[video_id]: video_id})
 
+    def set_tags_key(self, tag_id):
+        if tag_id in self._video_keys.keys():
+            return
+        self._video_keys[tag_id] = str(uuid.uuid4())
+        self._key_id_data["tags"].update({self._tag_keys[tag_id]: tag_id})
+
     def get_object_key(self, object_id):
         return self._object_keys.get(object_id, None)
 
@@ -95,6 +102,9 @@ class PointCloudParser:
     def get_video_key(self, video_id):
         return self._video_keys.get(video_id, None)
 
+    def get_tag_key(self, tag_id):
+        return self._video_keys.get(tag_id, None)
+
     def set_user_data(self):
         for data in self._annotation:
             if not self._user:
@@ -102,6 +112,36 @@ class PointCloudParser:
                 self._user["createdAt"] = str(data.attributes.get("createdAt", datetime.now()))
                 self._user["updatedAt"] = str(data.attributes.get("updatedAt", datetime.now()))
                 break
+
+    def set_attribute_data(self):
+        for i, item in enumerate(self._annotations):
+            self.set_tags_key(i)
+            for attrs in self._get_label_attrs(item.label):
+                if attrs == "occluded":
+                    continue
+                tag = {
+                    "name": attrs,
+                    "value_type": "test",
+                    "color": "",
+                    "id": i,
+                    "hotkey": "",
+                    "applicable_type": "imagesOnly",
+                    "classes": []
+                }
+
+                self._meta_data["tags"].append(tag)
+                self.get_tag_key(i)
+
+                tag = {
+                    "name": attrs,
+                    "value": item.label,
+                    "labelerLogin": self._user["name"],
+                    "createdAt": self._user["createdAt"],
+                    "updatedAt": self._user["updatedAt"],
+                    "key": self.get_tag_key(i)
+                }
+
+                self._tags.append(tag)
 
     def set_label_data(self):
         classes_info = []
@@ -283,6 +323,9 @@ class PointCloudParser:
             "objects": self._label_objects,
             "figures": {}
         }
+
+        if self._tags:
+            frame["figures"] = self._tags
 
         if self._frame_data.get(key):
             frame["figures"] = self._frame_data[key]

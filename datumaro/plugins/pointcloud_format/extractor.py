@@ -63,7 +63,12 @@ class PointCloudExtractor(SourceExtractor):
         label_cat = LabelCategories(attributes=common_attrs)
         if meta:
             for label in meta["classes"]:
-                label_cat.add(label['title'])
+                attrs = []
+                for tag in meta["tags"]:
+                    if tag["value"] == label['title']:
+                        attrs.append(tag["name"])
+
+                label_cat.add(label['title'], attributes=attrs)
 
         categories[AnnotationType.label] = label_cat
 
