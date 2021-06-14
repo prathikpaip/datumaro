@@ -137,11 +137,10 @@ class PointCloudParser:
                         }
                         tags
                         self._meta_data["tags"].append(tag)
-                        self.get_tag_key(i)
 
                         tag = {
                             "name": attrs,
-                            "value": self._get_label(item.label),
+                            "value": item.label,
                             "labelerLogin": self._user["name"],
                             "createdAt": self._user["createdAt"],
                             "updatedAt": self._user["updatedAt"],
@@ -149,6 +148,8 @@ class PointCloudParser:
                         }
 
                         self._tags.append(tag)
+
+            print(self._tags)
 
     def set_label_data(self):
         classes_info = []

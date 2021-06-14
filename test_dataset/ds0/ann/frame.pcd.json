@@ -1,0 +1,75 @@
+{
+    "description": "",
+    "key": "a040baa1-d0d7-4f4e-ae6a-89093cd2efdb",
+    "tags": [],
+    "objects": [
+        {
+            "key": "5b4d212f-f47a-4a4a-90a5-b2fe252c6d66",
+            "classTitle": "car",
+            "tags": [],
+            "labelerLogin": "Anil",
+            "createdAt": "",
+            "updatedAt": ""
+        },
+        {
+            "key": "5ceb87fd-a61b-462a-80ad-ce2a111e0d70",
+            "classTitle": "bus",
+            "tags": [],
+            "labelerLogin": "Anil",
+            "createdAt": "",
+            "updatedAt": ""
+        }
+    ],
+    "figures": [
+        {
+            "key": "17958cba-48df-482f-b3b6-d66333511131",
+            "objectKey": "5b4d212f-f47a-4a4a-90a5-b2fe252c6d66",
+            "geometryType": "cuboid_3d",
+            "geometry": {
+                "position": {
+                    "x": 320.86,
+                    "y": 979.18,
+                    "z": 1.04
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "dimensions": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "labelerLogin": "Anil",
+            "createdAt": "",
+            "updatedAt": ""
+        },
+        {
+            "key": "a46b25df-8403-4eae-8c1a-7a3b8b7920ef",
+            "objectKey": "5ceb87fd-a61b-462a-80ad-ce2a111e0d70",
+            "geometryType": "cuboid_3d",
+            "geometry": {
+                "position": {
+                    "x": 318.19,
+                    "y": 974.66,
+                    "z": 1.3
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "dimensions": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "labelerLogin": "Anil",
+            "createdAt": "",
+            "updatedAt": ""
+        }
+    ]
+}
