@@ -91,7 +91,7 @@ class PointCloudParser:
     def set_tags_key(self, tag_id):
         if tag_id in self._video_keys.keys():
             return
-        self._video_keys[tag_id] = str(uuid.uuid4())
+        self._tag_keys[tag_id] = str(uuid.uuid4())
         self._key_id_data["tags"].update({self._tag_keys[tag_id]: tag_id})
 
     def get_object_key(self, object_id):
