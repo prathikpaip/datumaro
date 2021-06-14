@@ -332,7 +332,7 @@ class PointCloudParser:
         }
 
         if self._tags:
-            frame["figures"] = self._tags
+            frame["tags"] = self._tags
 
         if self._frame_data.get(key):
             frame["figures"] = self._frame_data[key]
