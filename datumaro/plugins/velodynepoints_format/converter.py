@@ -167,11 +167,11 @@ class XmlAnnotationWriter:
         for attribute in attributes:
             self._open_attribute()
             for i, key in enumerate(attribute.keys()):
-                if i < len(attribute.keys()):
-                    self._indent(newline=True)
                 self.xmlgen.startElement(key, {})
                 self.xmlgen.characters(attribute[key])
                 self.xmlgen.endElement(key)
+                if i < len(attribute.keys()):
+                    self._indent(newline=True)
 
             self._close_attribute()
         self._close_attributes()

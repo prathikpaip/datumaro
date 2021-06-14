@@ -178,7 +178,7 @@ class PointCloudParser:
                         "updatedAt": str(self._user["updatedAt"])
                     }
                     for tag in self._tags:
-                        if tag["name"] == label["name"]:
+                        if tag["value"] == label["name"]:
                             label_object["tags"].append(tag)
                     classes_info.append(classes)
                     self._label_objects.append(label_object)
