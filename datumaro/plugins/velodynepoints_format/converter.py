@@ -142,15 +142,21 @@ class XmlAnnotationWriter:
         self._close_pose()
 
     def _open_attributes(self):
+        self._indent(newline=True)
         self.xmlgen.startElement("attributes", {})
+        self._level += 1
+        self._indent()
 
     def _close_attributes(self):
+        self._indent(newline=True)
+        self._level -= 1
+        self._indent()
         self.xmlgen.endElement("attributes")
 
     def _open_attribute(self):
+        self.xmlgen.startElement("attribute", {})
         self._level += 1
         self._indent()
-        self.xmlgen.startElement("attribute", {})
 
     def _close_attribute(self):
         self._level -= 1

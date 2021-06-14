@@ -115,7 +115,7 @@ class PointCloudParser:
                 break
 
     def set_attribute_data(self):
-        for i, item in enumerate(self._annotations):
+        for i, item in enumerate(self._annotation):
             self.set_tags_key(i)
             for attrs in self._get_label_attrs(item.label):
                 if attrs == "occluded":
