@@ -141,7 +141,7 @@ class PointCloudParser:
 
                         tag = {
                             "name": attrs,
-                            "value": item.label,
+                            "value": self._get_label(item.label).name,
                             "labelerLogin": self._user["name"],
                             "createdAt": self._user["createdAt"],
                             "updatedAt": self._user["updatedAt"],
