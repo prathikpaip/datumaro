@@ -66,6 +66,7 @@ class PointCloudParser:
 
         self._frame_data = {}
         self.set_user_data()
+        self.set_attribute_data()
         self.set_label_data()
         self.generate_frames()
 
