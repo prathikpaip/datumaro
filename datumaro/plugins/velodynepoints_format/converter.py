@@ -213,7 +213,6 @@ class _SubsetWriter:
     def create_tracklets(self, subset):
 
         for i, data in enumerate(subset):
-
             index = self._write_item(data, i)
             for item in data.annotations:
                 if item.type == AnnotationType.cuboid:
