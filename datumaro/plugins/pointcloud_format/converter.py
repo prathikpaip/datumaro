@@ -104,7 +104,7 @@ class PointCloudParser:
         return self._video_keys.get(video_id, None)
 
     def get_tag_key(self, tag_id):
-        return self._video_keys.get(tag_id, None)
+        return self._tag_keys.get(tag_id, None)
 
     def set_user_data(self):
         for data in self._annotation:
