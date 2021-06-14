@@ -169,7 +169,6 @@ class XmlAnnotationWriter:
         for attribute in attributes:
             self._open_attribute()
             for key in attribute.keys():
-                self._indent(newline=True)
                 self.xmlgen.startElement(key, {})
                 self.xmlgen.characters(attribute[key])
                 self.xmlgen.endElement(key)
@@ -193,6 +192,7 @@ class XmlAnnotationWriter:
                     elif element == "attributes":
                         self._add_attribute(value)
                     else:
+                        self._indent(newline=True)
                         self.xmlgen.startElement(element, {})
                         self.xmlgen.characters(str(value))
                         self.xmlgen.endElement(element)
