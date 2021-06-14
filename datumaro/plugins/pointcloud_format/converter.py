@@ -120,8 +120,8 @@ class PointCloudParser:
             for item in data.annotations:
                 if item.label not in labels:
                     labels.append(item.label)
-                    for i, attrs in enumerate(self._get_label_attrs(item.label)):
-                        i = len(labels) + i
+                    for index, attrs in enumerate(self._get_label_attrs(item.label)):
+                        i = len(labels) + index
                         self.set_tags_key(i)
 
                         if attrs == "occluded":
