@@ -118,14 +118,15 @@ class PointCloudParser:
         labels = []
         for data in self._annotation:
             for item in data.annotations:
-                i = len(self._tags)
-                self.set_tags_key(i)
-                tags = {}
                 if item.label not in labels:
                     labels.append(item.label)
-                    for attrs in self._get_label_attrs(item.label):
+                    for i, attrs in enumerate(self._get_label_attrs(item.label)):
+                        i = len(labels) + i
+                        self.set_tags_key(i)
+
                         if attrs == "occluded":
                             continue
+
                         tag = {
                             "name": attrs,
                             "value_type": "test",
@@ -135,7 +136,7 @@ class PointCloudParser:
                             "applicable_type": "imagesOnly",
                             "classes": []
                         }
-                        tags
+
                         self._meta_data["tags"].append(tag)
 
                         tag = {
