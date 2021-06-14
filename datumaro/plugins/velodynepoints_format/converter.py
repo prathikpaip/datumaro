@@ -170,7 +170,7 @@ class XmlAnnotationWriter:
                 self.xmlgen.startElement(key, {})
                 self.xmlgen.characters(attribute[key])
                 self.xmlgen.endElement(key)
-                if i < len(attribute.keys()):
+                if i < len(attribute.keys()) - 1:
                     self._indent(newline=True)
 
             self._close_attribute()
