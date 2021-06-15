@@ -38,6 +38,8 @@ class PointCloudParser:
         self._label_objects = []
         self._frames = {}
         self._tags = []
+        self._labels = []
+        self._attribute_length = 0
 
         key_id_data = {
             "tags": {},
@@ -115,13 +117,14 @@ class PointCloudParser:
                 break
 
     def set_attribute_data(self):
-        labels = []
         for data in self._annotation:
             for item in data.annotations:
-                if item.label not in labels:
-                    labels.append(item.label)
+                if item.label not in self._labels:
+                    self._labels.append(item.label)
+                    self._attribute_length
                     for index, attrs in enumerate(self._get_label_attrs(item.label)):
-                        i = len(labels) + index
+                        self._attribute_length += 1
+                        i = self._attribute_length
                         self.set_tags_key(i)
 
                         if attrs == "occluded":
