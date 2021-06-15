@@ -164,16 +164,17 @@ class XmlAnnotationWriter:
 
     def _add_attribute(self, attributes):
         self._open_attributes()
-        for attribute in attributes:
+        for k, attribute in enumerate(attributes):
             self._open_attribute()
-            for i, key in enumerate(attribute.keys()):
+            for index, key in enumerate(attribute.keys()):
                 self.xmlgen.startElement(key, {})
                 self.xmlgen.characters(attribute[key])
                 self.xmlgen.endElement(key)
-                if i < len(attribute.keys()) - 1:
+                if index < len(attribute.keys()) - 1:
                     self._indent(newline=True)
-
             self._close_attribute()
+            if k < len(attribute.keys()) - 1:
+                self._indent(newline=True)
         self._close_attributes()
 
     def generate_tracklets(self):
