@@ -173,8 +173,6 @@ class XmlAnnotationWriter:
                 if index < len(attribute.keys()) - 1:
                     self._indent(newline=True)
             self._close_attribute()
-            if k < len(attribute.keys()) - 1:
-                self._indent(newline=True)
         self._close_attributes()
 
     def generate_tracklets(self):
@@ -299,10 +297,9 @@ class _SubsetWriter:
         return label_cat.items[label_id]
 
     def _get_label_attrs(self, label):
-        print(f" ************** {label=}")
         label_cat = self._extractor.categories().get(
             AnnotationType.label, LabelCategories())
-        print(f" ************** {label_cat=}")
+
         if isinstance(label, int):
             label = label_cat[label]
         return set(chain(label.attributes, label_cat.attributes)) - \
