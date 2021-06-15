@@ -121,7 +121,6 @@ class PointCloudParser:
             for item in data.annotations:
                 if item.label not in self._labels:
                     self._labels.append(item.label)
-                    self._attribute_length
                     for index, attrs in enumerate(self._get_label_attrs(item.label)):
                         self._attribute_length += 1
                         i = self._attribute_length
@@ -152,6 +151,7 @@ class PointCloudParser:
                         }
 
                         self._tags.append(tag)
+            print(self._tags)
 
     def set_label_data(self):
         classes_info = []
