@@ -121,10 +121,10 @@ class PointCloudParser:
             for item in data.annotations:
                 if item.label not in self._labels:
                     self._labels.append(item.label)
-                    for index, attrs in enumerate(self._get_label_attrs(item.label)):
+                    for attrs in self._get_label_attrs(item.label):
                         self._attribute_length += 1
-                        i = self._attribute_length
-                        self.set_tags_key(i)
+                        tag_id = self._attribute_length
+                        self.set_tags_key(tag_id)
 
                         if attrs == "occluded":
                             continue
@@ -133,7 +133,7 @@ class PointCloudParser:
                             "name": attrs,
                             "value_type": "test",
                             "color": "",
-                            "id": i,
+                            "id": tag_id,
                             "hotkey": "",
                             "applicable_type": "imagesOnly",
                             "classes": []
@@ -147,11 +147,10 @@ class PointCloudParser:
                             "labelerLogin": self._user["name"],
                             "createdAt": self._user["createdAt"],
                             "updatedAt": self._user["updatedAt"],
-                            "key": self.get_tag_key(i)
+                            "key": self.get_tag_key(tag_id)
                         }
 
                         self._tags.append(tag)
-            print(self._tags)
 
     def set_label_data(self):
         classes_info = []
