@@ -124,7 +124,6 @@ class PointCloudParser:
 
                 self._labels.append(item.label)
                 for attrs in self._get_label(item.label).attributes:
-                    print(attrs)
                     self._attribute_length += 1
 
                     tag_id = self._attribute_length
