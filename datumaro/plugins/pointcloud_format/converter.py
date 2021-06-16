@@ -123,8 +123,10 @@ class PointCloudParser:
                     continue
 
                 self._labels.append(item.label)
-                for attrs in self._get_label_attrs(item.label):
+                for attrs in self._get_label(item.label).attributes:
+                    print(attrs)
                     self._attribute_length += 1
+
                     tag_id = self._attribute_length
                     self.set_tags_key(tag_id)
 
@@ -153,11 +155,11 @@ class PointCloudParser:
                     }
 
                     self._tags.append(tag)
+                    print(self._labels, self._tags)
 
     def set_label_data(self):
         classes_info = []
         for data in self._annotation:
-
             if not self._label_objects:
                 for label in data.attributes.get("labels", []):
 

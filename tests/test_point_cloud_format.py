@@ -366,6 +366,7 @@ class PointCloudConverterTest(TestCase):
         src_label_cat.add('bus')
         src_label_cat.items[0].attributes.update(['a1'])
         src_label_cat.items[1].attributes.update(['a4', 'a3', 'empty'])
+        print(f"{src_label_cat=}")
 
         source_dataset = Dataset.from_iterable([
             DatasetItem(id='frame_000000',
@@ -399,7 +400,7 @@ class PointCloudConverterTest(TestCase):
                                               group=0,
                                               points=[23.04, 8.75, -0.78, 0.0, 0.0,
                                                       0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                                              label=1,
+                                              label=0,
                                               z_order=0)],
                         subset='key_id_map', path=[],
                         image=None,
