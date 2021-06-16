@@ -154,7 +154,7 @@ class PointCloudParser:
                     }
 
                     self._tags.append(tag)
-                    print(self._labels, self._tags)
+
 
     def set_label_data(self):
         classes_info = []
