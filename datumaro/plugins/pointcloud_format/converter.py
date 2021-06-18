@@ -117,42 +117,43 @@ class PointCloudParser:
                 break
 
     def set_attribute_data(self):
-        if  self._label_objects:
-            labels = self._annotation.categories().get(AnnotationType.label, LabelCategories())
-            for label in labels._indices.values():
+        labels = self._annotation.categories().get(AnnotationType.label, LabelCategories())
+        for label in labels._indices.values():
 
-                self._labels.append(label)
-                for attrs in self._get_label(label).attributes:
-                    self._attribute_length += 1
+            self._labels.append(label)
+            for attrs in self._get_label(label).attributes:
+                self._attribute_length += 1
 
-                    tag_id = self._attribute_length
-                    self.set_tags_key(tag_id)
+                tag_id = self._attribute_length
+                self.set_tags_key(tag_id)
 
-                    if attrs == "occluded":
-                        continue
+                if attrs == "occluded":
+                    continue
 
-                    tag = {
-                        "name": attrs,
-                        "value_type": "text",
-                        "color": "",
-                        "id": tag_id,
-                        "hotkey": "",
-                        "applicable_type": "imagesOnly",
-                        "classes": []
-                    }
+                tag = {
+                    "name": attrs,
+                    "value_type": "text",
+                    "color": "",
+                    "id": tag_id,
+                    "hotkey": "",
+                    "applicable_type": "imagesOnly",
+                    "classes": []
+                }
 
-                    self._meta_data["tags"].append(tag)
+                self._meta_data["tags"].append(tag)
 
-                    tag = {
-                        "name": attrs,
-                        "value": self._get_label(label).name,
-                        "labelerLogin": self._user["name"],
-                        "createdAt": self._user["createdAt"],
-                        "updatedAt": self._user["updatedAt"],
-                        "key": self.get_tag_key(tag_id)
-                    }
+                tag = {
+                    "name": attrs,
+                    "value": self._get_label(label).name,
+                    "labelerLogin": self._user["name"],
+                    "createdAt": self._user["createdAt"],
+                    "updatedAt": self._user["updatedAt"],
+                    "key": self.get_tag_key(tag_id)
+                }
 
-                    self._tags.append(tag)
+                self._tags.append(tag)
+
+
 
     def set_label_data(self):
         classes_info = []
