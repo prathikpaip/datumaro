@@ -119,7 +119,6 @@ class PointCloudParser:
     def set_attribute_data(self):
         labels = self._annotation.categories().get(AnnotationType.label, LabelCategories())
         for label in labels._indices.values():
-            print(label)
 
             self._labels.append(label)
             for attrs in self._get_label(label).attributes:
