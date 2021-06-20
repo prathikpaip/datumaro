@@ -25,6 +25,7 @@ class AnnotationType(Enum):
     polyline = auto()
     bbox = auto()
     caption = auto()
+    cuboid = auto()
 
 _COORDINATE_ROUNDING_DIGITS = 2
 
